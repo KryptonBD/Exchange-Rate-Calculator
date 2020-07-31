@@ -11,11 +11,17 @@ const swapBtn = document.getElementById("swap");
 function calculateRate() {
     const currencyOne = currencyElOne.value;
     const currencyTwo = currencyElTwo.value;
-
-    fetch(`https://api.ratesapi.io/api/latest?base=${currencyOne}`)
+    const url =  "https://api.frankfurter.app/latest?from="
+    // const url = https://api.ratesapi.io/api/latest?base=
+    fetch(`${url}${currencyOne}`)
     .then(res => res.json())
     .then(data => {
-        console.log(data.rates[currencyTwo]);
+        console.log(data);
+        let rates = data.rates[currencyTwo];
+
+        rateEl.innerText = `1 ${currencyOne} = ${rates} ${currencyTwo}`;
+
+        amountElTwo.value = (amountElOne.value * rates).toFixed(2);
     }); 
 }
 
@@ -25,3 +31,11 @@ currencyElTwo.addEventListener("change", calculateRate);
 amountElOne.addEventListener("input", calculateRate);
 amountElTwo.addEventListener("input", calculateRate);
 
+swapBtn.addEventListener("click", ()=>{
+    let temp = currencyElOne.value;
+    currencyElOne.value = currencyElTwo.value;
+    currencyElTwo.value = temp;
+    calculateRate();
+})
+
+calculateRate();
